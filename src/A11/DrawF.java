@@ -11,9 +11,13 @@ import java.awt.geom.Line2D;
 import java.awt.geom.QuadCurve2D;
 
 public class DrawF {
+    static int i=10;
     public static void main(String[] args) throws Exception {
+
         String M=args[0];
         int L=Integer.parseInt(args[1]);
+
+
         while(L>=3&&L<=20) {
             Scanner in = new Scanner(System.in);
 

@@ -1,5 +1,6 @@
 package A12;
 
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class MagicSquareChecker{
