@@ -1,17 +1,17 @@
 package A13;
 
 
-
 import A12.MagicSquareChecker;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-
 
 
 public class MagicSquareCheckerFromFile extends Component {
@@ -121,6 +121,24 @@ public class MagicSquareCheckerFromFile extends Component {
 
     private static int Magic_num(int[][] Sqr){
         return MagicSquareChecker.getMagicNumber(Sqr);
+    }
+
+    static int download(String address) {
+        try {
+            URL url = new URL(address);
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+            int c = in.read();
+            while (c != -1) {
+                System.out.print((char) c);
+                c = in.read();
+            }
+            in.close();
+        } catch (Exception e) {
+            System.out.println(e);
+            return -1;
+        }
+        return 0;
     }
 }
 
