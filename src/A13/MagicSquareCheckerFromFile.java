@@ -16,37 +16,53 @@ import java.util.Scanner;
 
 public class MagicSquareCheckerFromFile extends Component {
     public static void main(String[] args) throws IOException {
-        int i,j, count =0;
+        int i,j,count=0;
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select a file:");
         int userSelection = fileChooser.showSaveDialog(null);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
+
             File file = fileChooser.getSelectedFile();
             String filepath = file.getAbsolutePath();
             System.out.println("The path of the selected file is: " + filepath);
-            Scanner scanner = new Scanner(file);
-
             Path path = Paths.get(filepath);
+
             int lines;
             lines = (int) Files.lines(path).count();
             int[][] Sqr= new int[lines][lines];
+            FileReader fr = new FileReader(file);
 
-            while (scanner.hasNextLine()){
-                    scanner.useDelimiter(",");
-                    int r = scanner.nextInt();
-                    count++;
+            BufferedReader lineReader = new BufferedReader(fr);
+            String line;
+
+            String[] d;
+            String[] l=new String[lines];
+            i=0;
+
+            while((line=lineReader.readLine())!=null){
+                Scanner scanner = new Scanner(line);
+                line=scanner.nextLine();
+                l[i] = line;
+                d =line.split(",");
+                count += d.length;
+
+                i++;
             }
 
-            if(count<lines||count>lines){
+            if((count%lines)!=0){
                 System.out.println("wrong count of numbers in a line");
                 System.exit(10);
             }
-            for(i=0;i<lines;i++){
-                for(j=0;j<lines;j++){
-                    Sqr[i][j]= scanner.nextInt();
-                }
-            }
+
+           for(i=0;i<lines;i++){
+               d = l[i].split(",");
+               for(j=0;j<lines;j++){
+                   Sqr[i][j] = Integer.parseInt(d[j]);
+               }
+           }
+
+
 
         for( i=0;i<lines;i++) {
             System.out.print("------------------------\n");
@@ -60,13 +76,12 @@ public class MagicSquareCheckerFromFile extends Component {
             if (MagicSqrChecker(Sqr)) {
                 int M_num = Magic_num(Sqr);
                     JFileChooser chooser = new JFileChooser();
-                    chooser.setCurrentDirectory(new java.io.File("."));
+                    chooser.setCurrentDirectory(new File("."));
                     chooser.setDialogTitle("Choose Folder to put file:");
                     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                   File file1 = new File(chooser.getCurrentDirectory()+"/MagicSquareSavedFile.txt");
+                   File file1 = new File(chooser.getSelectedFile().getAbsolutePath()+"\\MagicSquareSavedFile.txt");
                     try {
-                        FileReader fr = new FileReader(file);
                         FileWriter fw = new FileWriter(file1);
                         int c = fr.read();
                         while(c!=-1) {
@@ -79,13 +94,23 @@ public class MagicSquareCheckerFromFile extends Component {
                         e.printStackTrace();
                     }
                     PrintWriter writer = new PrintWriter(file1);
-                    writer.append("\"The square is magic and the magic element is:"+M_num);
+                    for(i=0;i<lines;i++){
+                        for(j=0;j<lines;j++){
+                            if(j==(lines-1)){
+                                writer.print(String.valueOf(Sqr[i][j]+"\n"));
+                            }else{
+                                writer.print(String.valueOf(Sqr[i][j])+",");
+                            }
+                        }
+                    }
+                    writer.print("\nThe square is magic and the magic element is: "+String.valueOf(M_num));
+                    writer.close();
                 }
             } else {
-                System.out.println("The square isn't magic because at least one of the sums isn't equal to the others!");
+                System.out.println("\nThe square isn't magic because at least one of the sums isn't equal to the others!");
             }
 
-            scanner.close();
+
         }
         }
     private static boolean MagicSqrChecker(int[][] Sqr) {
