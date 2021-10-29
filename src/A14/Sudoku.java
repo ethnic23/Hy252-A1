@@ -14,50 +14,76 @@ class Sudoku{
 
     public static void main(String[] args){
         int[][] brd = new int[9][9];
-        int valid=0,invalid=0;
+        int valid=0,invalid=0,unsolvable=0;
         boolean v = true;
         Scanner scanner = new Scanner(System.in);
 
-        /*for(int i=0;i<9;i++){
-            for(int j=0;j<9;j++){
-                System.out.println("Give a number from 0 to 9: ");
-                brd[i][j]=scanner.nextInt();
-            }
-        }*/
         System.out.println("Give how many filled cells: ");
-
         int X=scanner.nextInt();
         System.out.println("How many number of boards: ");
         int N=scanner.nextInt();
         System.out.println("N="+N);
         System.out.println("X="+X);
+        long start = System.currentTimeMillis();
+        while(valid<10){
         for(int i=0;i<N;i++) {
             brd = randomBoard(X);
-            for (i = 0; i < 9; i++) {
+            System.out.println("Board #" + i);
+            for (int k = 0; k < 9; k++) {
                 for (int j = 0; j < 9; j++) {
-                    System.out.print(brd[i][j] + " ");
+                    System.out.print(brd[k][j] + " ");
                 }
                 System.out.println();
             }
+            System.out.println();
 
-            for (i = 0; i < 9; i++) {
+            for (int k = 0; k < 9; k++) {
                 for (int j = 0; j < 9; j++) {
-                    v = isValidBoard(brd, i, j);
+                    v = isValidBoard(brd, k, j);
                 }
             }
-        /*if(v){
-            if(isSolvableBoard(brd)){
-
-            }
-        }*/
-
-            for (i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    System.out.print(brd[i][j] + " ");
+            if (v) {
+                valid++;
+                if (isSolvableBoard(brd)) {
+                    brd = solve(brd);
+                    System.out.println("Solution of Board #" + (i+1));
+                    for (int k = 0; k < 9; k++) {
+                        for (int j = 0; j < 9; j++) {
+                            System.out.print(brd[k][j] + " ");
+                        }
+                        System.out.println();
+                    }
+                } else {
+                    unsolvable++;
+                    System.out.println("Solution of Board #" + (i+1));
+                    for (int k = 0; k < 9; k++) {
+                        for (int j = 0; j < 9; j++) {
+                            System.out.print(brd[k][j] + " ");
+                        }
+                        System.out.println();
+                    }
                 }
-                System.out.println();
+            } else {
+                invalid++;
+                System.out.println("Solution of Board #" + (i+1));
+                for (int k = 0; k < 9; k++) {
+                    for (int j = 0; j < 9; j++) {
+                        System.out.print(brd[k][j] + " ");
+                    }
+                    System.out.println();
+                }
             }
+            System.out.println();
         }
+
+        }
+        long end = System.currentTimeMillis();
+        float sec = (end-start)/1000f;
+        System.out.println("Empty cells per boards: "+X);
+        System.out.println("Valid boards created: "+valid);
+        System.out.println("Invalid boards created: "+invalid);
+        System.out.println("Unsolvable boards created: "+unsolvable);
+        System.out.println("Elapsed time in seconds: "+sec);
     }
     static int[][] randomBoard(int X){
         int count=0,r_i,r_j;
@@ -99,6 +125,18 @@ class Sudoku{
             }
         }
         return true;
+    }
+    static int[][] solve(int[][] board) {
+        for (int row = BOARD_START_INDEX; row < BOARD_SIZE; row++) {
+            for (int column = BOARD_START_INDEX; column < BOARD_SIZE; column++) {
+                if (board[row][column] == NO_VALUE) {
+                    for (int k = MIN_VALUE; k <= MAX_VALUE; k++) {
+                        board[row][column] = k;
+                    }
+                }
+            }
+        }
+      return board;
     }
 }
 

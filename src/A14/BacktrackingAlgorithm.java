@@ -32,6 +32,7 @@ class BacktrackingAlgorithm {
 
 
 
+
     private void printBoard() {
         for (int row = BOARD_START_INDEX; row < BOARD_SIZE; row++) {
             for (int column = BOARD_START_INDEX; column < BOARD_SIZE; column++) {
@@ -58,6 +59,7 @@ class BacktrackingAlgorithm {
         }
         return true;
     }
+
 
     boolean isValid(int[][] board, int row, int column) {
         return rowConstraint(board, row) &&
